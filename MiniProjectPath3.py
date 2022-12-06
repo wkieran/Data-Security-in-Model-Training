@@ -22,24 +22,26 @@ X_train, X_test, y_train, y_test = train_test_split(images, labels, test_size=0.
 
 def dataset_searcher(number_list,images,labels):
   #insert code that when given a list of integers, will find the labels and images
-  #and put them all in numpy arrary (same time as training and testing data)
-  print(number_list)
-  print("images", images[1])
-  print("labels", labels[1])
-  images_nparray = np.array()
-  labels_nparray = np.array()
+  #and put them all in numpy arrary ****(same time as training and testing data)****
+
+  images_nparray = np.empty([0,0])
+  labels_nparray = np.empty([0,0])
 
   for n in number_list:
     np.append(images_nparray, images[n])
     np.append(labels_nparray, labels[n])
 
   return images_nparray, labels_nparray
-  #return images_nparray, labels_nparray
 
 def print_numbers(images,labels):
   #insert code that when given images and labels (of numpy arrays)
   #the code will plot the images and their labels in the title.
-   
+  fig, ax = plt.subplots(1,5)
+  for i in range(len(images)):
+    print(images[i])
+    ax[0,i].matshow(images[i])
+    ax[0,i].set_title(labels[i])
+  plt.show()
   pass
 
 class_numbers = [2,0,8,7,5]
@@ -59,34 +61,42 @@ X_train_reshaped = X_train.reshape(X_train.shape[0], -1)
 #Now we can fit the model
 model_1.fit(X_train_reshaped, y_train)
 #Part 3 Calculate model1_results using model_1.predict()
-model1_results = model_1.predict()#What should go in here? Hint, look at documentation and some reshaping may need to be done)
+model1_results = model_1.predict(X_test.reshape(X_test.shape[0], -1))
+#What should go in here? Hint, look at documentation and some reshaping may need to be done)
 
 
 def OverallAccuracy(results, actual_values):
   #Calculate the overall accuracy of the model (out of the predicted labels, how many were correct?)
-  Accuracy = 0
-  return Accuracy
+  return metrics.accuracy_score(y_true = actual_values, y_pred = results)
 
 
 # Part 4
 Model1_Overall_Accuracy = OverallAccuracy(model1_results, y_test)
 print("The overall results of the Gaussian model is " + str(Model1_Overall_Accuracy))
 
-
 #Part 5
 allnumbers = [0,1,2,3,4,5,6,7,8,9]
-allnumbers_images, allnumbers_labels = dataset_searcher(allnumbers)
-
+#allnumbers = np.array(allnumbers)
+allnumbers_images, allnumbers_labels = dataset_searcher(allnumbers, images, labels)
+#allnumbers_result = model_1.predict(allnumbers.reshape(-1, 1))
+#allnumbers_Accuracy = OverallAccuracy(allnumbers_result, y_test)
+#print("The overall results of the Gaussian model is " + str(allnumbers_Accuracy))
 
 
 #Part 6
 #Repeat for K Nearest Neighbors
 model_2 = KNeighborsClassifier(n_neighbors=10)
-
+model_2.fit(X_train_reshaped, y_train)
+model2_results = model_2.predict(X_test.reshape(X_test.shape[0], -1))
+Model2_Overall_Accuracy = OverallAccuracy(model2_results, y_test)
+print("The overall results of the Gaussian model is " + str(Model2_Overall_Accuracy))
 
 #Repeat for the MLP Classifier
 model_3 = MLPClassifier(random_state=0)
-
+model_3.fit(X_train_reshaped, y_train)
+model3_results = model_3.predict(X_test.reshape(X_test.shape[0], -1))
+Model3_Overall_Accuracy = OverallAccuracy(model3_results, y_test)
+print("The overall results of the Gaussian model is " + str(Model3_Overall_Accuracy))
 
 
 #Part 8
