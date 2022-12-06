@@ -23,32 +23,49 @@ X_train, X_test, y_train, y_test = train_test_split(images, labels, test_size=0.
 def dataset_searcher(number_list,images,labels):
   #insert code that when given a list of integers, will find the labels and images
   #and put them all in numpy arrary ****(same time as training and testing data)****
-
+  '''
   images_nparray = np.empty([0,0])
   labels_nparray = np.empty([0,0])
 
   for n in number_list:
     np.append(images_nparray, images[n])
     np.append(labels_nparray, labels[n])
+  '''
+
+
+  images_nparray = np.array(images[number_list])
+  labels_nparray = np.array(labels[number_list])
 
   return images_nparray, labels_nparray
 
 def print_numbers(images,labels):
   #insert code that when given images and labels (of numpy arrays)
   #the code will plot the images and their labels in the title.
+  '''
   fig, ax = plt.subplots(1,5)
   for i in range(len(images)):
-    print(images[i])
-    ax[0,i].matshow(images[i])
+    #print(images[i])
+    ax[0,i].imshow(images[i], cmap='binary')
     ax[0,i].set_title(labels[i])
   plt.show()
+  '''
+
+  nplots = 5
+  fig = plt.figure(figsize=(8,8))
+  for j in range(nplots):
+      plt.subplot(1,5,j+1)
+      plt.imshow(images[j], cmap='binary')
+      plt.title(labels[j])
+  plt.show()
+
+
   pass
 
 class_numbers = [2,0,8,7,5]
 #Part 1
 class_number_images , class_number_labels = dataset_searcher(class_numbers, images, labels)
 #Part 2
-print_numbers(class_number_images , class_number_labels )
+print_numbers(class_number_images , class_number_labels)
 
 
 model_1 = GaussianNB()
@@ -61,7 +78,8 @@ X_train_reshaped = X_train.reshape(X_train.shape[0], -1)
 #Now we can fit the model
 model_1.fit(X_train_reshaped, y_train)
 #Part 3 Calculate model1_results using model_1.predict()
-model1_results = model_1.predict(X_test.reshape(X_test.shape[0], -1))
+X_test_reshaped = X_test.reshape(X_test.shape[0], -1)
+model1_results = model_1.predict(X_test_reshaped)
 #What should go in here? Hint, look at documentation and some reshaping may need to be done)
 
 
@@ -110,7 +128,7 @@ X_train_poison = X_train + poison
 
 #Part 9-11
 #Determine the 3 models performance but with the poisoned training data X_train_poison and y_train instead of X_train and y_train
-
+print("The poisoned results of the Gaussian model is")
 
 
 #Part 12-13
