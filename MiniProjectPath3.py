@@ -89,14 +89,14 @@ model_2 = KNeighborsClassifier(n_neighbors=10)
 model_2.fit(X_train_reshaped, y_train)
 model2_results = model_2.predict(X_test.reshape(X_test.shape[0], -1))
 Model2_Overall_Accuracy = OverallAccuracy(model2_results, y_test)
-print("The overall results of the Gaussian model is " + str(Model2_Overall_Accuracy))
+print("The overall results of the KNN model is " + str(Model2_Overall_Accuracy))
 
 #Repeat for the MLP Classifier
 model_3 = MLPClassifier(random_state=0)
 model_3.fit(X_train_reshaped, y_train)
 model3_results = model_3.predict(X_test.reshape(X_test.shape[0], -1))
 Model3_Overall_Accuracy = OverallAccuracy(model3_results, y_test)
-print("The overall results of the Gaussian model is " + str(Model3_Overall_Accuracy))
+print("The overall results of the MLP model is " + str(Model3_Overall_Accuracy))
 
 
 #Part 8
