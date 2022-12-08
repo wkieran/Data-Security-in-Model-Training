@@ -24,17 +24,7 @@ X_train, X_test, y_train, y_test = train_test_split(images, labels, test_size=0.
 def dataset_searcher(number_list,images,labels):
   #insert code that when given a list of integers, will find the labels and images
   #and put them all in numpy arrary ****(same time as training and testing data)****
-  '''
-  images_nparray = np.empty([0,0])
-  labels_nparray = np.empty([0,0])
 
-  for n in number_list:
-    np.append(images_nparray, images[n])
-    np.append(labels_nparray, labels[n])
-  '''
-  # need some evaluation that goes through number_list. looking for x, 
-  # cycle through labels and the image associated with label will be appened
-  #np where == ?
   images_nparray = []
   labels_nparray = []
 
@@ -42,7 +32,7 @@ def dataset_searcher(number_list,images,labels):
     labels_nparray.append(labels[np.where(labels == num)[0][0]])
     images_nparray.append(images[np.where(labels == num)[0][0]])
 
-  #converto np arrays before returning
+  #convert to np arrays before returning
   images_nparray = np.array(images_nparray)
   labels_nparray = np.array(labels_nparray)
 
@@ -51,14 +41,6 @@ def dataset_searcher(number_list,images,labels):
 def print_numbers(images,labels):
   #insert code that when given images and labels (of numpy arrays)
   #the code will plot the images and their labels in the title.
-  '''
-  fig, ax = plt.subplots(1,5)
-  for i in range(len(images)):
-    #print(images[i])
-    ax[0,i].imshow(images[i], cmap='binary')
-    ax[0,i].set_title(labels[i])
-  plt.show()
-  '''
 
   nplots = len(images)
   fig = plt.figure(figsize=(8,8))
@@ -67,7 +49,6 @@ def print_numbers(images,labels):
       plt.imshow(images[j], cmap='binary')
       plt.title(labels[j])
   plt.show()
-
 
   pass
 
@@ -104,8 +85,8 @@ print("The overall results of the Gaussian model is " + str(Model1_Overall_Accur
 allnumbers = [0,1,2,3,4,5,6,7,8,9]
 allnumbers_images, allnumbers_labels = dataset_searcher(allnumbers, images, labels)
 
-
-print_numbers(allnumbers_images , model_1.predict(allnumbers_images.reshape(allnumbers_images.shape[0], -1))) #this is with NB model
+#labels using NB model
+print_numbers(allnumbers_images , model_1.predict(allnumbers_images.reshape(allnumbers_images.shape[0], -1)))
 
 
 #Part 6
@@ -116,6 +97,9 @@ model2_results = model_2.predict(X_test_reshaped)
 Model2_Overall_Accuracy = OverallAccuracy(model2_results, y_test)
 print("The overall results of the KNN model is " + str(Model2_Overall_Accuracy))
 
+#labels for all numbers using KNN model
+print_numbers(allnumbers_images , model_2.predict(allnumbers_images.reshape(allnumbers_images.shape[0], -1)))
+
 #Repeat for the MLP Classifier
 model_3 = MLPClassifier(random_state=0)
 model_3.fit(X_train_reshaped, y_train)
@@ -123,6 +107,8 @@ model3_results = model_3.predict(X_test_reshaped)
 Model3_Overall_Accuracy = OverallAccuracy(model3_results, y_test)
 print("The overall results of the MLP model is " + str(Model3_Overall_Accuracy))
 
+#labels for all numbers using MLP model
+print_numbers(allnumbers_images , model_3.predict(allnumbers_images.reshape(allnumbers_images.shape[0], -1)))
 
 #Part 8
 #Poisoning
@@ -135,6 +121,7 @@ X_train_poison = X_train + poison
 
 #Part 9-11
 #Determine the 3 models performance but with the poisoned training data X_train_poison and y_train instead of X_train and y_train
+# NB model with poisoned data
 model_GNB_poison = GaussianNB()
 X_poison_reshaped = X_train_poison.reshape(X_train_poison.shape[0], -1)
 model_GNB_poison.fit(X_poison_reshaped, y_train)
@@ -143,6 +130,21 @@ GNBp_accuracy = OverallAccuracy(GNBp_results, y_test)
 
 print("The poisoned results of the Gaussian model is " + str(GNBp_accuracy))
 
+# KNN model with poisoned data
+model_KNN_poison = KNeighborsClassifier(n_neighbors=10)
+model_KNN_poison.fit(X_poison_reshaped, y_train)
+KNNp_results = model_KNN_poison.predict(X_test_reshaped)
+KNNp_accuracy = OverallAccuracy(KNNp_results, y_test)
+
+print("The poisoned results of the KNN model is " + str(KNNp_accuracy))
+
+# MLP model with poisoned data
+model_MLP_poison = MLPClassifier(random_state=0)
+model_MLP_poison.fit(X_poison_reshaped, y_train)
+MLPp_results = model_MLP_poison.predict(X_test_reshaped)
+MLPp_accuracy = OverallAccuracy(MLPp_results, y_test)
+
+print("The poisoned results of the MLP model is " + str(MLPp_accuracy))
 
 #Part 12-13
 # Denoise the poisoned training data, X_train_poison. 
@@ -153,10 +155,33 @@ print("The poisoned results of the Gaussian model is " + str(GNBp_accuracy))
 kernel_pca = KernelPCA(n_components=400, kernel="rbf", gamma=1e-3, fit_inverse_transform=True, alpha=5e-3)
 kernel_pca.fit(X_poison_reshaped)
 X_train_denoised = kernel_pca.inverse_transform(kernel_pca.transform(X_poison_reshaped))
-#X_train_denoised = 0# fill in the code here
 
 
 #Part 14-15
 #Determine the 3 models performance but with the denoised training data, X_train_denoised and y_train instead of X_train_poison and y_train
 #Explain how the model performances changed after the denoising process.
 
+# NB model with denoised data
+model_GNB_denoised = GaussianNB()
+X_denoised_reshaped = X_train_denoised.reshape(X_train_denoised.shape[0], -1)
+model_GNB_denoised.fit(X_train_reshaped, y_train)
+GNBd_results = model_GNB_denoised.predict(X_test_reshaped)
+GNBd_accuracy = OverallAccuracy(GNBd_results, y_test)
+
+print("The denoised results of the Gaussian model is " + str(GNBd_accuracy))
+
+# KNN model with denoised data
+model_KNN_denoised = KNeighborsClassifier(n_neighbors=10)
+model_KNN_denoised.fit(X_denoised_reshaped, y_train)
+KNNd_results = model_KNN_denoised.predict(X_test_reshaped)
+KNNd_accuracy = OverallAccuracy(KNNd_results, y_test)
+
+print("The denoised results of the KNN model is " + str(KNNd_accuracy))
+
+# MLP model with denoised data
+model_MLP_denoised = MLPClassifier(random_state=0)
+model_MLP_denoised.fit(X_denoised_reshaped, y_train)
+MLPd_results = model_MLP_denoised.predict(X_test_reshaped)
+MLPd_accuracy = OverallAccuracy(MLPp_results, y_test)
+
+print("The denoised results of the MLP model is " + str(MLPd_accuracy))
