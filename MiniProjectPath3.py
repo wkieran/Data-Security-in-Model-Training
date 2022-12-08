@@ -35,9 +35,16 @@ def dataset_searcher(number_list,images,labels):
   # need some evaluation that goes through number_list. looking for x, 
   # cycle through labels and the image associated with label will be appened
   #np where == ?
-  
-  images_nparray = np.array(images[number_list])
-  labels_nparray = np.array(labels[number_list])
+  images_nparray = []
+  labels_nparray = []
+
+  for num in number_list:
+    labels_nparray.append(labels[np.where(labels == num)[0][0]])
+    images_nparray.append(images[np.where(labels == num)[0][0]])
+
+  #converto np arrays before returning
+  images_nparray = np.array(images_nparray)
+  labels_nparray = np.array(labels_nparray)
 
   return images_nparray, labels_nparray
 
@@ -83,8 +90,6 @@ model_1.fit(X_train_reshaped, y_train)
 #Part 3 Calculate model1_results using model_1.predict()
 X_test_reshaped = X_test.reshape(X_test.shape[0], -1)
 model1_results = model_1.predict(X_test_reshaped)
-#What should go in here? Hint, look at documentation and some reshaping may need to be done)
-
 
 def OverallAccuracy(results, actual_values):
   #Calculate the overall accuracy of the model (out of the predicted labels, how many were correct?)
@@ -97,12 +102,10 @@ print("The overall results of the Gaussian model is " + str(Model1_Overall_Accur
 
 #Part 5
 allnumbers = [0,1,2,3,4,5,6,7,8,9]
-#allnumbers = np.array(allnumbers)
 allnumbers_images, allnumbers_labels = dataset_searcher(allnumbers, images, labels)
-#allnumbers_result = model_1.predict(allnumbers.reshape(-1, 1))
-#allnumbers_Accuracy = OverallAccuracy(allnumbers_result, y_test)
-#print("The overall results of the Gaussian model is " + str(allnumbers_Accuracy))
-print_numbers(allnumbers_images , model1_results) #this is with NB model
+
+
+print_numbers(allnumbers_images , model_1.predict(allnumbers_images.reshape(allnumbers_images.shape[0], -1))) #this is with NB model
 
 
 #Part 6
@@ -134,10 +137,11 @@ X_train_poison = X_train + poison
 #Determine the 3 models performance but with the poisoned training data X_train_poison and y_train instead of X_train and y_train
 model_GNB_poison = GaussianNB()
 X_poison_reshaped = X_train_poison.reshape(X_train_poison.shape[0], -1)
-model_GNB_poison.fit(X_train_reshaped, y_train)
-model1_results = model_1.predict(X_test_reshaped)
+model_GNB_poison.fit(X_poison_reshaped, y_train)
+GNBp_results = model_GNB_poison.predict(X_test_reshaped)
+GNBp_accuracy = OverallAccuracy(GNBp_results, y_test)
 
-print("The poisoned results of the Gaussian model is")
+print("The poisoned results of the Gaussian model is " + str(GNBp_accuracy))
 
 
 #Part 12-13

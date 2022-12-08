@@ -1,6 +1,7 @@
 from sklearn.datasets import load_digits
 digits = load_digits()
 print(digits.data.shape)
+labels = digits.target
 
 import matplotlib.pyplot as plt
 #plt.gray()
@@ -14,3 +15,5 @@ ax[1,0].matshow(digits.images[10])
 ax[1,1].matshow(digits.images[11])
 
 plt.show()
+
+print(labels[0:60])
