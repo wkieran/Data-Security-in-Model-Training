@@ -164,7 +164,7 @@ X_train_denoised = kernel_pca.inverse_transform(kernel_pca.transform(X_poison_re
 # NB model with denoised data
 model_GNB_denoised = GaussianNB()
 X_denoised_reshaped = X_train_denoised.reshape(X_train_denoised.shape[0], -1)
-model_GNB_denoised.fit(X_train_reshaped, y_train)
+model_GNB_denoised.fit(X_denoised_reshaped, y_train)
 GNBd_results = model_GNB_denoised.predict(X_test_reshaped)
 GNBd_accuracy = OverallAccuracy(GNBd_results, y_test)
 
@@ -182,6 +182,6 @@ print("The denoised results of the KNN model is " + str(KNNd_accuracy))
 model_MLP_denoised = MLPClassifier(random_state=0)
 model_MLP_denoised.fit(X_denoised_reshaped, y_train)
 MLPd_results = model_MLP_denoised.predict(X_test_reshaped)
-MLPd_accuracy = OverallAccuracy(MLPp_results, y_test)
+MLPd_accuracy = OverallAccuracy(MLPd_results, y_test)
 
 print("The denoised results of the MLP model is " + str(MLPd_accuracy))
