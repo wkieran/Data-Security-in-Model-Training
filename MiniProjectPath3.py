@@ -22,8 +22,6 @@ labels = digits.target
 X_train, X_test, y_train, y_test = train_test_split(images, labels, test_size=0.6, shuffle=False)
 
 def dataset_searcher(number_list,images,labels):
-  #insert code that when given a list of integers, will find the labels and images
-  #and put them all in numpy arrary ****(same time as training and testing data)****
 
   images_nparray = []
   labels_nparray = []
@@ -32,15 +30,12 @@ def dataset_searcher(number_list,images,labels):
     labels_nparray.append(labels[np.where(labels == num)[0][0]])
     images_nparray.append(images[np.where(labels == num)[0][0]])
 
-  #convert to np arrays before returning
   images_nparray = np.array(images_nparray)
   labels_nparray = np.array(labels_nparray)
 
   return images_nparray, labels_nparray
 
 def print_numbers(images,labels):
-  #insert code that when given images and labels (of numpy arrays)
-  #the code will plot the images and their labels in the title.
 
   nplots = len(images)
   fig = plt.figure(figsize=(8,8))
