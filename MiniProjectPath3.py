@@ -35,14 +35,16 @@ def dataset_searcher(number_list,images,labels):
 
   return images_nparray, labels_nparray
 
-def print_numbers(images,labels):
+def print_numbers(images,labels,title):
 
   nplots = len(images)
   fig = plt.figure(figsize=(8,8))
   for j in range(nplots):
-      plt.subplot(1,nplots,j+1)
-      plt.imshow(images[j], cmap='binary')
-      plt.title(labels[j])
+    plt.subplot(1,nplots,j+1)
+    plt.imshow(images[j], cmap='binary')
+    plt.title(labels[j])
+  
+  fig.suptitle(title)
   plt.show()
 
   pass
@@ -51,7 +53,7 @@ class_numbers = [2,0,8,7,5]
 #Part 1
 class_number_images , class_number_labels = dataset_searcher(class_numbers, images, labels)
 #Part 2
-print_numbers(class_number_images , class_number_labels)
+print_numbers(class_number_images , class_number_labels, "Specific Number Classes")
 
 
 model_1 = GaussianNB()
@@ -81,7 +83,7 @@ allnumbers = [0,1,2,3,4,5,6,7,8,9]
 allnumbers_images, allnumbers_labels = dataset_searcher(allnumbers, images, labels)
 
 #labels using NB model
-print_numbers(allnumbers_images , model_1.predict(allnumbers_images.reshape(allnumbers_images.shape[0], -1)))
+print_numbers(allnumbers_images , model_1.predict(allnumbers_images.reshape(allnumbers_images.shape[0], -1)), "GNB Model")
 
 
 #Part 6
@@ -93,7 +95,7 @@ Model2_Overall_Accuracy = OverallAccuracy(model2_results, y_test)
 print("The overall results of the KNN model is " + str(Model2_Overall_Accuracy))
 
 #labels for all numbers using KNN model
-print_numbers(allnumbers_images , model_2.predict(allnumbers_images.reshape(allnumbers_images.shape[0], -1)))
+print_numbers(allnumbers_images , model_2.predict(allnumbers_images.reshape(allnumbers_images.shape[0], -1)), "KNN Model")
 
 #Repeat for the MLP Classifier
 model_3 = MLPClassifier(random_state=0)
@@ -103,7 +105,7 @@ Model3_Overall_Accuracy = OverallAccuracy(model3_results, y_test)
 print("The overall results of the MLP model is " + str(Model3_Overall_Accuracy))
 
 #labels for all numbers using MLP model
-print_numbers(allnumbers_images , model_3.predict(allnumbers_images.reshape(allnumbers_images.shape[0], -1)))
+print_numbers(allnumbers_images , model_3.predict(allnumbers_images.reshape(allnumbers_images.shape[0], -1)), "MLP Model")
 
 #Part 8
 #Poisoning
@@ -124,6 +126,7 @@ GNBp_results = model_GNB_poison.predict(X_test_reshaped)
 GNBp_accuracy = OverallAccuracy(GNBp_results, y_test)
 
 print("The poisoned results of the Gaussian model is " + str(GNBp_accuracy))
+print_numbers(allnumbers_images, model_GNB_poison.predict(allnumbers_images.reshape(allnumbers_images.shape[0], -1)), "Poisoned GNB Model")
 
 # KNN model with poisoned data
 model_KNN_poison = KNeighborsClassifier(n_neighbors=10)
@@ -132,6 +135,7 @@ KNNp_results = model_KNN_poison.predict(X_test_reshaped)
 KNNp_accuracy = OverallAccuracy(KNNp_results, y_test)
 
 print("The poisoned results of the KNN model is " + str(KNNp_accuracy))
+print_numbers(allnumbers_images, model_KNN_poison.predict(allnumbers_images.reshape(allnumbers_images.shape[0], -1)), "Poisoned KNN Model")
 
 # MLP model with poisoned data
 model_MLP_poison = MLPClassifier(random_state=0)
@@ -140,6 +144,7 @@ MLPp_results = model_MLP_poison.predict(X_test_reshaped)
 MLPp_accuracy = OverallAccuracy(MLPp_results, y_test)
 
 print("The poisoned results of the MLP model is " + str(MLPp_accuracy))
+print_numbers(allnumbers_images, model_MLP_poison.predict(allnumbers_images.reshape(allnumbers_images.shape[0], -1)), "Poisoned MLP Model")
 
 #Part 12-13
 # Denoise the poisoned training data, X_train_poison. 
@@ -164,6 +169,7 @@ GNBd_results = model_GNB_denoised.predict(X_test_reshaped)
 GNBd_accuracy = OverallAccuracy(GNBd_results, y_test)
 
 print("The denoised results of the Gaussian model is " + str(GNBd_accuracy))
+print_numbers(allnumbers_images, model_GNB_denoised.predict(allnumbers_images.reshape(allnumbers_images.shape[0], -1)), "Denoised GNB Model")
 
 # KNN model with denoised data
 model_KNN_denoised = KNeighborsClassifier(n_neighbors=10)
@@ -172,6 +178,7 @@ KNNd_results = model_KNN_denoised.predict(X_test_reshaped)
 KNNd_accuracy = OverallAccuracy(KNNd_results, y_test)
 
 print("The denoised results of the KNN model is " + str(KNNd_accuracy))
+print_numbers(allnumbers_images, model_KNN_denoised.predict(allnumbers_images.reshape(allnumbers_images.shape[0], -1)), "Denoised KNN Model")
 
 # MLP model with denoised data
 model_MLP_denoised = MLPClassifier(random_state=0)
@@ -180,3 +187,4 @@ MLPd_results = model_MLP_denoised.predict(X_test_reshaped)
 MLPd_accuracy = OverallAccuracy(MLPd_results, y_test)
 
 print("The denoised results of the MLP model is " + str(MLPd_accuracy))
+print_numbers(allnumbers_images, model_MLP_denoised.predict(allnumbers_images.reshape(allnumbers_images.shape[0], -1)), "Denoised MLP Model")
